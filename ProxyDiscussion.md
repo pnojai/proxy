@@ -7,12 +7,7 @@ output:
     keep_md: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(openxlsx)
-library(dplyr)
-library(ggplot2)
-```
+
 
 ## Proxy discussion
 
@@ -62,7 +57,8 @@ Since this introduced some gaps in the ranking, I ordered the merged data in tur
 ### Plotting
 Organizing the countries sequentially for each of the two variables makes it possible to do a one-to-one comparison of the variables. A scatter plot of GDP and HDI will show their correlation. A perfect correlation would be represented by identical sequence indexes for GDP and HDI. If they were perfectly correlated, the scatter plot would fall on the identity line. I plotted the two variables and superimposed an identity line.
 
-```{r proxy}
+
+```r
 ## Read data.
 gdp <- read.xlsx("CountriesRanks.xlsx", sheet = 1)
 hdi <- read.xlsx("CountriesRanks.xlsx", sheet = 2)
@@ -85,6 +81,8 @@ ggplot(gdp_hdi) +
              x = "GDP Rank",
              y = "HDI Rank")
 ```
+
+![](ProxyDiscussion_files/figure-html/proxy-1.png)<!-- -->
 
 ## Conclusions
 It is important to note that the line in the plot is not a regression line. I did not run a regression analysis on the two variables. This is simply a visual comparison of, first, the per capita GDP to HDI and, second, the scattered points to a perfectly correlated identity line. Visual inspection suggests that both variables follow some degree of linear correlation. The degree of correlation could be quantified through further analysis.
