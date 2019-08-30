@@ -88,3 +88,23 @@ ggplot(gdp_hdi) +
 
 ## Conclusions
 It is important to note that the line in the plot is not a regression line. I did not run a regression analysis on the two variables. This is simply a visual comparison of, first, the per capita GDP to HDI and, second, the scattered points to a perfectly correlated identity line. Visual inspection suggests that both variables follow some degree of linear correlation. The degree of correlation could be quantified through further analysis.
+
+## Next steps
+Make this a tall dataset. Come back after finishing other assignments.
+
+I have four variables represented in columns. That means I have four observations per row, instead of just one. The structure of the data frame, gdp_hdi, should be.
+
+- Country
+- Measure
+- Value
+
+Measure should be a factor whose values are.
+
+- PerCapitaGDPRank
+- HDIRank
+- GDP_order
+- HDI_order
+
+I keep forgetting about this aspect of the tidydata approach. My tools and plots will interoperate better if I do this. Look up the command for it and add it to my _hammer_ repository.
+
+Make it a habit. Live long and prosper.
