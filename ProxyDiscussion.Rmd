@@ -7,6 +7,9 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(openxlsx)
+library(dplyr)
+library(ggplot2)
 ```
 
 ## Proxy discussion
@@ -50,13 +53,36 @@ The Wikipedia sources made some distinctions between sovereign nations and unrec
 This data cleansing approach is admittedly not very reproducible. It would be better to save a download of the web pages at a point in time and scrub the data with code. Emacs macros are useful for one-off tasks, but coding this with regular expressions would make it repeatable. I expect to do this later in the course, DATA 607.
 
 ### Organization
-Using R, I read each list into a data frame. I joined the lists on country using the dplyr package to produce a table of countries which have both a GDP and an HDI value. I could have examined the countries that appeared on one side only for possible disparities in spelling. I didn't do that for this demonstration, but there could be a few countries that could be added to the analysis with this cleansing step.
+Using R and the package, openxlsx, I read each list into a data frame. I joined the lists on country using the dplyr package to produce a table of countries which have both a GDP and an HDI value. I could have examined the countries that appeared on one side only for possible disparities in spelling. I didn't do that for this demonstration, but there could be a few countries that could be added to the analysis with this cleansing step.
 
 Since this introduced some gaps in the ranking, I ordered the merged data in turn by each of the two ranking variables (GDP and HDI) and added another integer sequence. I wanted rankings for each measure with no gaps in the sequences.
 
 ### Plotting
-Organizing the countries sequentially for each of the two variables makes it possible to do a one-to-one comparison of the variables. A scatter plot of GDP and HDI will show their correlation. I perfect correlation would be represented by identical sequence indexes for GDP and HDI. If they were perfectly correlated, the scatter plot would fall on the identity line.
+Organizing the countries sequentially for each of the two variables makes it possible to do a one-to-one comparison of the variables. A scatter plot of GDP and HDI will show their correlation. A perfect correlation would be represented by identical sequence indexes for GDP and HDI. If they were perfectly correlated, the scatter plot would fall on the identity line. I plotted the two variables and superimposed an identity line.
 
 ```{r proxy}
-summary(cars)
+## Read data.
+gdp <- read.xlsx("CountriesRanks.xlsx", sheet = 1)
+hdi <- read.xlsx("CountriesRanks.xlsx", sheet = 2)
+
+## Eliminate countries that only have one of the two variabes.
+gdp_hdi <- inner_join(gdp, hdi, by = "Country")
+
+## Sequence each of the two variables.
+gdp_hdi <- cbind(arrange(gdp_hdi, PerCapitaGDPRank),
+                 "GDP_order" = seq_along(gdp_hdi$PerCapitaGDPRank))
+gdp_hdi <- cbind(arrange(gdp_hdi, HDIRank),
+                 "HDI_order" = seq_along(gdp_hdi$HDIRank))
+
+## Plot
+ggplot(gdp_hdi) +
+        geom_point(mapping = aes(x = GDP_order, y = HDI_order)) +
+        geom_line(mapping = aes(x = 1:nrow(gdp_hdi), y = 1:nrow(gdp_hdi))) +
+        labs(title = "Comparison of Countries' Per Capita GDP to Human Development Index",
+             subtitle = "Note: Line is identify, not a regression line",
+             x = "GDP Rank",
+             y = "HDI Rank")
 ```
+
+## Conclusions
+It is important to note that the line in the plot is not a regression line. I did not run a regression analysis on the two variables. This is simply a visual comparison of, first, the per capita GDP to HDI and, second, the scattered points to a perfectly correlated identity line. Visual inspection suggests that both variables follow some degree of linear correlation. The degree of correlation could be quantified through further analysis.
